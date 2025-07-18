@@ -1,27 +1,24 @@
 package cl.kibernumacademy.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.never;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import org.mockito.ArgumentCaptor;
+import static org.mockito.BDDMockito.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
-import java.time.LocalDateTime;
+import cl.kibernumacademy.model.Channel;
+import cl.kibernumacademy.model.Notification;
+
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class NotificationProcessorTest {
@@ -128,7 +125,7 @@ public class NotificationProcessorTest {
 
     boolean result = notificationProcessor.sendNotification(message, recipient, Channel.EMAIL);
 
-    then(result).isTrue();
+    assertTrue(result);
     then(emailService).should().send(message, recipient);
   }
 
@@ -136,7 +133,6 @@ public class NotificationProcessorTest {
   void testNotificationHistory_ContainsCorrectData() {
     String message = "Historial de prueba";
     String recipient = "historial@example.com";
-    LocalDateTime now = LocalDateTime.now();
     given(emailService.send(message, recipient)).willReturn(true);
 
     notificationProcessor.sendNotification(message, recipient, Channel.EMAIL);
